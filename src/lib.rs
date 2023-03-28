@@ -1,4 +1,3 @@
-
 use wasm_bindgen::prelude::*;
 use wee_alloc::WeeAlloc;
 
@@ -6,7 +5,7 @@ use wee_alloc::WeeAlloc;
 static ALLOC: WeeAlloc = WeeAlloc::INIT;
 
 #[wasm_bindgen(module = "/www/utils/rnd.js")]
-extern {
+extern "C" {
     fn rnd(max: usize) -> usize;
 }
 
@@ -16,7 +15,7 @@ pub enum Direction {
     Up,
     Right,
     Down,
-    Left
+    Left,
 }
 
 #[wasm_bindgen]
@@ -37,7 +36,7 @@ struct Snake {
 
 impl Snake {
     fn new(spawn_index: usize, size: usize) -> Snake {
-        let mut body = vec!();
+        let mut body = vec![];
 
         for i in 0..size {
             body.push(SnakeCell(spawn_index - i));
@@ -49,7 +48,6 @@ impl Snake {
         }
     }
 }
-
 
 #[wasm_bindgen]
 pub struct World {
@@ -65,8 +63,7 @@ pub struct World {
 #[wasm_bindgen]
 impl World {
     pub fn new(width: usize, snake_idx: usize) -> World {
-
-        let snake = Snake::new(snake_idx, 3);
+        let snake = Snake::new(snake_idx, 10);
         let size = width * width;
 
         World {
@@ -84,8 +81,10 @@ impl World {
         let mut reward_cell;
 
         loop {
-          reward_cell = rnd(max);
-          if !snake_body.contains(&SnakeCell(reward_cell)) { break; }
+            reward_cell = rnd(max);
+            if !snake_body.contains(&SnakeCell(reward_cell)) {
+                break;
+            }
         }
 
         Some(reward_cell)
@@ -104,7 +103,7 @@ impl World {
     }
 
     pub fn snake_head_idx(&self) -> usize {
-       self.snake.body[0].0
+        self.snake.body[0].0
     }
 
     pub fn start_game(&mut self) {
@@ -119,7 +118,7 @@ impl World {
         match self.status {
             Some(GameStatus::Won) => String::from("You have won!"),
             Some(GameStatus::Lost) => String::from("You have lost!"),
-            Some(GameStatus::Played) => String::from("Playing"),
+            Some(GameStatus::Played) => String::from("Playing!!"),
             None => String::from("No Status"),
         }
     }
@@ -127,7 +126,9 @@ impl World {
     pub fn change_snake_dir(&mut self, direction: Direction) {
         let next_cell = self.gen_next_snake_cell(&direction);
 
-        if self.snake.body[1].0 == next_cell.0 { return; }
+        if self.snake.body[1].0 == next_cell.0 {
+            return;
+        }
 
         self.next_cell = Some(next_cell);
         self.snake.direction = direction;
@@ -150,7 +151,7 @@ impl World {
                     Some(cell) => {
                         self.snake.body[0] = cell;
                         self.next_cell = None;
-                    },
+                    }
                     None => {
                         self.snake.body[0] = self.gen_next_snake_cell(&self.snake.direction);
                     }
@@ -175,7 +176,7 @@ impl World {
 
                     self.snake.body.push(SnakeCell(self.snake.body[1].0));
                 }
-            },
+            }
             _ => {}
         }
     }
@@ -192,7 +193,7 @@ impl World {
                 } else {
                     SnakeCell(snake_idx + 1)
                 }
-            },
+            }
             Direction::Left => {
                 let treshold = row * self.width;
                 if snake_idx == treshold {
@@ -200,7 +201,7 @@ impl World {
                 } else {
                     SnakeCell(snake_idx - 1)
                 }
-            },
+            }
             Direction::Up => {
                 let treshold = snake_idx - (row * self.width);
                 if snake_idx == treshold {
@@ -208,7 +209,7 @@ impl World {
                 } else {
                     SnakeCell(snake_idx - self.width)
                 }
-            },
+            }
             Direction::Down => {
                 let treshold = snake_idx + ((self.width - row) * self.width);
                 if snake_idx + self.width == treshold {
@@ -216,10 +217,9 @@ impl World {
                 } else {
                     SnakeCell(snake_idx + self.width)
                 }
-            },
+            }
         };
     }
-
 }
 
 // wasm-pack build --target web

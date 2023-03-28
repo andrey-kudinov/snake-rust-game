@@ -1,5 +1,3 @@
-
-
 const compression = require("compression");
 const express = require("express");
 const path = require("path");
@@ -17,5 +15,5 @@ app.get("*", (_, res) => {
 })
 
 app.listen(port, () => {
-  console.log("Server is running!");
+  console.log("http://localhost:3000");
 })

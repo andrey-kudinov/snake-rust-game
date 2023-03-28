@@ -8,5 +8,11 @@
   ],
   "module": "snake_game.js",
   "types": "snake_game.d.ts",
-  "sideEffects": false
+  "sideEffects": [
+    "./snippets/*"
+  ],
+  "dependencies": {
+    "express": "^4.17.1",
+    "compression": "^1.7.4"
+  }
 }
