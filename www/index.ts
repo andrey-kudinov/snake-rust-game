@@ -3,7 +3,7 @@ import { rnd } from './utils/rnd';
 
 init().then(wasm => {
   const CELL_SIZE = 40;
-  const WORLD_WIDTH = 24;
+  const WORLD_WIDTH = 12;
   const snakeSpawnIdx = rnd(WORLD_WIDTH * WORLD_WIDTH);
 
   const world = World.new(WORLD_WIDTH, snakeSpawnIdx);

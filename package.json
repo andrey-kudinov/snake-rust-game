@@ -5,7 +5,8 @@
   "main": "server/index.js",
   "scripts": {
     "start": "node server/index.js",
-    "build": "yarn --cwd www build"
+    "build": "yarn --cwd www build",
+    "build-rust": "wasm-pack build --target web"
   },
   "repository": {
     "type": "git",

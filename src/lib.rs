@@ -118,7 +118,7 @@ impl World {
         match self.status {
             Some(GameStatus::Won) => String::from("You have won!"),
             Some(GameStatus::Lost) => String::from("You have lost!"),
-            Some(GameStatus::Played) => String::from("Playing!!"),
+            Some(GameStatus::Played) => String::from("Playing!"),
             None => String::from("No Status"),
         }
     }
